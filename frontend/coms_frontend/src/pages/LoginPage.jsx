@@ -2,22 +2,50 @@ import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, MenuItem, Select, InputAdornment, Box } from '@mui/material';
 import { Email, Lock, Person } from '@mui/icons-material';
 import Image from '../assets/login.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        role: '',
+        position: '',
     });
+
+    const navigate = useNavigate();
+
+    const backend_url = import.meta.env.VITE_BACKEND_URL;
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Login Data:', formData);
-        // Handle login logic
+        try {
+            const response = await fetch(`${backend_url}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+            if (response.status === 200) {
+                navigate('/admin-panel');
+            }
+            else{
+                console.log('Invalid credentials');
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -92,8 +120,8 @@ const LoginPage = () => {
 
                         <Select
                             fullWidth
-                            name="role"
-                            value={formData.role}
+                            name="position"
+                            value={formData.position}
                             onChange={handleChange}
                             displayEmpty
                             variant="outlined"
