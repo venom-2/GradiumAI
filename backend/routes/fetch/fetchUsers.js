@@ -4,7 +4,7 @@ const pool = require('../../db');
 
 router.get('/fetch',async (req,res) => {
     try{
-        const result = await pool.query('SELECT * FROM users');
+        const result = await pool.query(`select * from users where position != 'Admin'`);
 
         console.log(result.rows);
 
