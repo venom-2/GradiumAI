@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import {
-    Box, TextField, Button, MenuItem, Typography, Container, Paper
+    Box, TextField, Button, MenuItem, Container, Paper, Typography
 } from "@mui/material";
+import toast from "react-hot-toast";
 
 const AdminCreateUser = () => {
     const [formData, setFormData] = useState({
@@ -20,7 +21,6 @@ const AdminCreateUser = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("User Data:", formData);
         try {
             const response = await fetch(`${backend_url}/user/register`, {
                 method: 'POST',
@@ -28,22 +28,35 @@ const AdminCreateUser = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
-            })
+            });
 
             const result = await response.json();
-            console.log(result);
+            toast.success('User Created Successfully');
+
+            setFormData({
+                first_name: "",
+                last_name: "",
+                email: "",
+                password: "",
+                position: "",
+            });
+        } catch (error) {
+            toast.error(error);
         }
-        catch(error){
-            console.log(error);
-        }
-  };
+    };
 
     return (
         <Container maxWidth="lg">
             <Paper
                 elevation={0}
-                sx={{ p: 2, borderRadius: 3, bgcolor: "white", mt: 4, width: "100%" }}
+                sx={{ p: 0, borderRadius: 3, bgcolor: "white", mt: 2, width: "100%" }}
             >
+                {/* Heading */}
+                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }} gutterBottom>
+                        Create New User
+                    </Typography>
+                </Box>
 
                 <Box
                     component="form"

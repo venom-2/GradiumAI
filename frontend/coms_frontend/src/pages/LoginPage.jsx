@@ -36,7 +36,7 @@ const LoginPage = () => {
 
             const result = await response.json();
             console.log(result);
-            if (response.status === 200) {
+            if (response.status === 200 && result.user.position === 'Admin') {
                 navigate('/admin-panel');
             }
             else{

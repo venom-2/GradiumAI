@@ -19,7 +19,7 @@ const Sidebar = () => {
                 '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box', backgroundColor: '#0b0464' },
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px', cursor: 'pointer' }} onClick={() => changeRoute('/admin-panel')}>
                 <Typography variant='h5' gutterBottom sx={{ color: 'white' }}>Gradium AI</Typography>
             </Box>
             <Divider color='white' />
@@ -35,7 +35,7 @@ const Sidebar = () => {
                     </ListItemButton>
 
                     {/* View Users */}
-                    <ListItemButton sx={{ '&:hover': { bgcolor: '#780cc4' } }}>
+                    <ListItemButton sx={{ '&:hover': { bgcolor: '#780cc4' } }} onClick={() => changeRoute('/admin-panel/view-users')}>
                         <ListItemIcon>
                             <Person sx={{ color: 'white' }} />
                         </ListItemIcon>
@@ -43,13 +43,12 @@ const Sidebar = () => {
                     </ListItemButton>
                 </List>
 
+                <Divider color='white' />
+
                 {/* Settings at the Bottom */}
                 <List>
-                    <ListItemButton sx={{ '&:hover': { bgcolor: '#780cc4' } }}>
-                        <ListItemIcon>
-                            <Settings sx={{ color: 'white' }} />
-                        </ListItemIcon>
-                        <ListItemText primary="Settings" sx={{ color: 'white' }} />
+                    <ListItemButton>
+                        <ListItemText primary="IMSEC, Ghaziabad" sx={{ color: 'white', mx: 4 }} />
                     </ListItemButton>
                 </List>
 
