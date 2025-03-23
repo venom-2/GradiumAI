@@ -5,7 +5,7 @@ require('dotenv').config();
 
 // initialise server
 const app = express();
-const PORT = process.env.PORT; 
+const PORT = process.env.PORT || 8721; 
 
 app.use(express.json());
 app.use(cors());
@@ -29,6 +29,26 @@ app.use('/user',require('./routes/add_users/user'));
 app.use('/',require('./routes/authentication/login'));
 
 app.use('/user',require('./routes/fetch/fetchUsers'));
+
+//  Student route
+app.use('/student',require('./routes/student/fetch'));
+
+app.use('/student',require('./routes/student/create'));
+
+app.use('/student',require('./routes/student/delete'));
+
+app.use('/student',require('./routes/student/update'));
+
+// Assessment route
+app.use('/assessment', require('./routes/assessment/create'));
+
+app.use('/assessment', require('./routes/assessment/fetch'));
+
+
+// Course Outcome route 
+
+app.use('/co', require('./routes/course_outcome/co'));
+
 
 app.listen(PORT, () => {
     console.log("Server listening at port:", PORT);

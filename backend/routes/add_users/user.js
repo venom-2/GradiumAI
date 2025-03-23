@@ -6,7 +6,7 @@ require('dotenv').config();
 
 router.post('/register',async (req,res) => {
 
-    const { email,first_name,last_name, password, position } = req.body;
+    const { email,first_name,last_name, password, role } = req.body;
 
     try{
         // Check if user already exists
@@ -17,8 +17,8 @@ router.post('/register',async (req,res) => {
 
         const hashedPassword = await bcrypt.hash(password,10);
 
-        const newUser = await pool.query('INSERT INTO users (email, first_name, last_name, password, position) VALUES ($1, $2, $3, $4, $5) RETURNING *', 
-            [email, first_name, last_name, hashedPassword, position]);
+        const newUser = await pool.query('INSERT INTO users (email, first_name, last_name, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *', 
+            [email, first_name, last_name, hashedPassword, role]);
 
         res.status(201).json({ message: 'User registered successfully', user: newUser.rows[0] });
 
