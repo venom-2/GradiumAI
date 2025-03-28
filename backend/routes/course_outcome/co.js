@@ -8,7 +8,21 @@ router.get('/fetch/:sem/:subject_id', async (req, res) => {
 
     const students = await pool.query('SELECT * FROM students WHERE semester = $1',[sem]);
 
+    // Temp value storage for COs
+    // Assuming there are 5 COs, initialize them to 0
     let co1 = 0, co2 = 0, co3 = 0, co4 = 0, co5 = 0;
+
+    // temp value of maximun cos
+    let max_co1 = 0, max_co2 = 0, max_co3 = 0, max_co4 = 0, max_co5 = 0;
+
+    // count of students having >= 60% in COs ct1
+    let co1_count_ct1 = 0, co2_count_ct1 = 0, co3_count_ct1 = 0, co4_count_ct1 = 0, co5_count_ct1 = 0;
+
+    // count of students having >= 60% in COs ct2
+    let co1_count_ct2 = 0, co2_count_ct2 = 0, co3_count_ct2 = 0, co4_count_ct2 = 0, co5_count_ct2 = 0;
+
+    // count of students having >= 60% in COs put
+    let co1_count_put = 0, co2_count_put = 0, co3_count_put = 0, co4_count_put = 0, co5_count_put = 0;
 
     for (let i = 0; i < students.rows.length; i++) {
         const student = students.rows[i];
@@ -26,16 +40,58 @@ router.get('/fetch/:sem/:subject_id', async (req, res) => {
             const row = ct1.rows[j];
             if(row.co === 1) {
                 co1 += row.marks_obtained;
+                max_co1 += row.max_marks;
             } else if(row.co === 2) {
                 co2 += row.marks_obtained;
+                max_co2 += row.max_marks;
             } else if(row.co === 3) {
                 co3 += row.marks_obtained;
+                max_co3 += row.max_marks;
             } else if(row.co === 4) {
                 co4 += row.marks_obtained;
+                max_co4 += row.max_marks;
             } else if(row.co === 5) {
                 co5 += row.marks_obtained;
+                max_co5 += row.max_marks;
             }
         }
+
+        // Calculating percentage for CT-01
+        if (max_co1 > 0) {
+            const percentage = (co1 / max_co1) * 100;
+            if (percentage >= 60) {
+                co1_count_ct1++;
+            }
+        }
+        if (max_co2 > 0) {
+            const percentage = (co2 / max_co2) * 100;
+            if (percentage >= 60) {
+                co2_count_ct1++;
+            }
+        }
+        if (max_co3 > 0) {
+            const percentage = (co3 / max_co3) * 100;
+            if (percentage >= 60) {
+                co3_count_ct1++;
+            }
+        }
+        if (max_co4 > 0) {
+            const percentage = (co4 / max_co4) * 100;
+            if (percentage >= 60) {
+                co4_count_ct1++;
+            }
+        }
+        if (max_co5 > 0) {
+            const percentage = (co5 / max_co5) * 100;
+            if (percentage >= 60) {
+                co5_count_ct1++;
+            }
+        }
+
+
+        // Initializing COs for CT-02 and PUT
+        co1 = 0; co2 = 0; co3 = 0; co4 = 0; co5 = 0;
+        max_co1 = 0; max_co2 = 0; max_co3 = 0; max_co4 = 0; max_co5 = 0;
 
         // Fetching CT-02 details
         const ct2 = await pool.query('select a.type_id,ast.type_name,a.subject_code,s.subject_name,a.max_marks,a.roll_no,a.semester_id,a.marks_obtained,q.question_id,q.question_no,q.max_marks as max_mark,q.question_text,q.co,q.marks_obtained from assessment a,questions q,assessment_type ast, subjects s where ast.type_id = a.type_id and a.assessment_id = q.assessment_id and s.subject_code = a.subject_code AND a.type_id = 2 AND roll_no = $1 AND semester_id = $2 AND s.subject_code = $3;', [roll_no, sem, subject_code]);
@@ -48,16 +104,58 @@ router.get('/fetch/:sem/:subject_id', async (req, res) => {
             const row = ct2.rows[j];
             if(row.co === 1) {
                 co1 += row.marks_obtained;
+                max_co1 += row.max_marks;
             } else if(row.co === 2) {
                 co2 += row.marks_obtained;
+                max_co2 += row.max_marks;
             } else if(row.co === 3) {
                 co3 += row.marks_obtained;
+                max_co3 += row.max_marks;
             } else if(row.co === 4) {
                 co4 += row.marks_obtained;
+                max_co4 += row.max_marks;
             } else if(row.co === 5) {
                 co5 += row.marks_obtained;
+                max_co5 += row.max_marks;
             }
         }
+
+        // Calculating percentage for CT-02
+
+        if (max_co1 > 0) {
+            const percentage = (co1 / max_co1) * 100;
+            if (percentage >= 60) {
+                co1_count_ct2++;
+            }
+        }
+        if (max_co2 > 0) {
+            const percentage = (co2 / max_co2) * 100;
+            if (percentage >= 60) {
+                co2_count_ct2++;
+            }
+        }
+        if (max_co3 > 0) {
+            const percentage = (co3 / max_co3) * 100;
+            if (percentage >= 60) {
+                co3_count_ct2++;
+            }
+        }
+        if (max_co4 > 0) {
+            const percentage = (co4 / max_co4) * 100;
+            if (percentage >= 60) {
+                co4_count_ct2++;
+            }
+        }
+        if (max_co5 > 0) {
+            const percentage = (co5 / max_co5) * 100;
+            if (percentage >= 60) {
+                co5_count_ct2++;
+            }
+        }
+
+        // Initializing COs for PUT
+        co1 = 0; co2 = 0; co3 = 0; co4 = 0; co5 = 0;
+        max_co1 = 0; max_co2 = 0; max_co3 = 0; max_co4 = 0; max_co5 = 0;
 
         // Fetching PUT details
         const put = await pool.query('select a.type_id,ast.type_name,a.subject_code,s.subject_name,a.max_marks,a.roll_no,a.semester_id,a.marks_obtained,q.question_id,q.question_no,q.max_marks as max_mark,q.question_text,q.co,q.marks_obtained from assessment a,questions q,assessment_type ast, subjects s where ast.type_id = a.type_id and a.assessment_id = q.assessment_id and s.subject_code = a.subject_code AND a.type_id = 1 AND roll_no = $1 AND semester_id = $2 AND s.subject_code = $3;', [roll_no, sem, subject_code]);
@@ -70,16 +168,57 @@ router.get('/fetch/:sem/:subject_id', async (req, res) => {
             const row = put.rows[j];
             if(row.co === 1) {
                 co1 += row.marks_obtained;
+                max_co1 += row.max_marks;
             } else if(row.co === 2) {
                 co2 += row.marks_obtained;
+                max_co2 += row.max_marks;
             } else if(row.co === 3) {
                 co3 += row.marks_obtained;
+                max_co3 += row.max_marks;
             } else if(row.co === 4) {
                 co4 += row.marks_obtained;
+                max_co4 += row.max_marks;
             } else if(row.co === 5) {
                 co5 += row.marks_obtained;
+                max_co5 += row.max_marks;
             }
         }
+
+        // Calculating percentage for PUT
+        if (max_co1 > 0) {
+            const percentage = (co1 / max_co1) * 100;
+            if (percentage >= 60) {
+                co1_count_put++;
+            }
+        }
+        if (max_co2 > 0) {
+            const percentage = (co2 / max_co2) * 100;
+            if (percentage >= 60) {
+                co2_count_put++;
+            }
+        }
+        if (max_co3 > 0) {
+            const percentage = (co3 / max_co3) * 100;
+            if (percentage >= 60) {
+                co3_count_put++;
+            }
+        }
+        if (max_co4 > 0) {
+            const percentage = (co4 / max_co4) * 100;
+            if (percentage >= 60) {
+                co4_count_put++;
+            }
+        }
+        if (max_co5 > 0) {
+            const percentage = (co5 / max_co5) * 100;
+            if (percentage >= 60) {
+                co5_count_put++;
+            }
+        }
+
+        // Resetting COs for next student
+        co1 = 0; co2 = 0; co3 = 0; co4 = 0; co5 = 0;
+        max_co1 = 0; max_co2 = 0; max_co3 = 0; max_co4 = 0; max_co5 = 0;
 
     }
 
